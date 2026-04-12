@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>数学Ⅰのお部屋</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f7f3ee;
+            --surface: #fffdfa;
+            --surface-soft: #f4ede4;
+            --surface-light: #eadfce;
+            --card: rgba(255, 252, 247, 0.96);
+            --line: rgba(163, 120, 66, 0.22);
+            --gold: #a97842;
+            --gold-strong: #c69252;
+            --cream: #2f241c;
+            --muted: #6e5b4b;
+            --accent: #8f5a3c;
+            --accent-soft: #b07a57;
+            --shadow: 0 14px 32px rgba(91, 67, 43, 0.10);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(201, 168, 122, 0.14), transparent 28%),
+                radial-gradient(circle at bottom right, rgba(143, 90, 60, 0.08), transparent 24%),
+                linear-gradient(180deg, #fbf8f3 0%, #f6f1ea 40%, #f8f4ee 100%);
+            color: #3d2e23;
+            min-width: 1024px;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif JP', serif;
+            letter-spacing: 0.04em;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 250, 244, 0.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(169, 120, 66, 0.16);
+            box-shadow: 0 8px 24px rgba(91, 67, 43, 0.08);
+        }
+
+        .nav-link {
+            position: relative;
+            padding-bottom: 0.25rem;
+            color: #6e5b4b;
+            text-decoration: none;
+            transition: color 0.25s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -0.15rem;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.25s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--cream);
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        .hero-section {
+            position: relative;
+            padding: 6rem 1rem 4rem;
+            background-image:
+                linear-gradient(rgba(250, 244, 236, 0.80), rgba(246, 238, 228, 0.88)),
+                url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            border-bottom: 1px solid rgba(169, 120, 66, 0.12);
+        }
+
+        .hero-section::after {
+            content: "";
+            position: absolute;
+            inset: auto 0 0 0;
+            height: 120px;
+            background: linear-gradient(to top, rgba(248, 244, 238, 1), rgba(248, 244, 238, 0));
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.55rem 1rem;
+            border: 1px solid rgba(212, 176, 106, 0.38);
+            border-radius: 999px;
+            background: rgba(255, 250, 244, 0.78);
+            color: var(--gold-strong);
+            font-size: 0.92rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            box-shadow: var(--shadow);
+        }
+
+        .hero-title {
+            font-size: clamp(2.8rem, 5vw, 4.8rem);
+            line-height: 1.15;
+            color: #4a3728;
+            margin-top: 1.4rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 3px 10px rgba(255,255,255,0.35);
+        }
+
+        .glass-card, .info-box, .lesson-box, .section-shell, .tool-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .info-box {
+            padding: 1.6rem;
+            height: 100%;
+        }
+
+        .info-label {
+            color: var(--gold);
+            font-size: 0.9rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 0.7rem;
+        }
+
+        .info-box strong,
+        .info-box p {
+            color: var(--cream);
+        }
+
+        .info-accent {
+            color: #e6c58b;
+        }
+
+        .lesson-box {
+            margin-top: 1.8rem;
+            padding: 1.7rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lesson-box::before {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 5px;
+            background: linear-gradient(180deg, var(--gold-strong), var(--accent-soft));
+        }
+
+        .lesson-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 140px;
+            padding: 1.2rem 1rem;
+            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(248,242,234,0.86));
+            border: 1px solid rgba(212, 176, 106, 0.18);
+            text-decoration: none;
+            transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+        }
+
+        .lesson-step:hover {
+            transform: translateY(-4px);
+            border-color: rgba(240, 199, 122, 0.5);
+            background: linear-gradient(180deg, rgba(212, 176, 106, 0.12), rgba(143, 61, 46, 0.08));
+        }
+
+        .section-shell {
+            padding: 0.4rem;
+        }
+
+        .accordion-header {
+            cursor: pointer;
+            transition: background-color 0.25s ease, border-color 0.25s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 20px;
+            padding: 1.15rem 1.4rem;
+            background: linear-gradient(90deg, rgba(201,170,122,0.18), rgba(255,255,255,0.72));
+            border: 1px solid transparent;
+        }
+
+        .accordion-header:hover {
+            border-color: rgba(240, 199, 122, 0.28);
+            background: linear-gradient(90deg, rgba(201,170,122,0.24), rgba(255,255,255,0.9));
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 1.2rem 0.6rem 0.8rem;
+        }
+
+        .accordion-content.active {
+            display: block;
+        }
+
+        .unit-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.25rem;
+            align-items: start;
+        }
+
+        .unit-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.25rem;
+            align-items: start;
+        }
+
+        .unit-section {
+            background: rgba(255,255,255,0.72);
+            border: 1px solid rgba(212, 176, 106, 0.14);
+            border-radius: 20px;
+            padding: 0.8rem;
+        }
+
+        .unit-header {
+            background: linear-gradient(90deg, rgba(176, 122, 87, 0.16), rgba(201, 170, 122, 0.16));
+            margin: 0.25rem 0;
+            font-weight: 600;
+            color: var(--cream);
+            cursor: pointer;
+            padding: 0.9rem 1rem;
+            border-radius: 16px;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid var(--gold);
+        }
+
+        .unit-header:hover {
+            background: linear-gradient(90deg, rgba(176, 122, 87, 0.24), rgba(201, 170, 122, 0.22));
+        }
+
+        .section-header {
+            font-size: 0.92rem;
+            margin: 0.45rem 0 0.35rem 0.4rem;
+            color: #6e5b4b;
+            cursor: pointer;
+            padding: 0.75rem 0.85rem;
+            border-radius: 14px;
+            background-color: rgba(255,255,255,0.9);
+            border: 1px solid rgba(212, 176, 106, 0.12);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .section-header:hover {
+            border-color: rgba(240, 199, 122, 0.28);
+            color: var(--cream);
+            background-color: rgba(201, 170, 122, 0.14);
+        }
+
+        .unit-header::after,
+        .section-header::after {
+            content: '＋';
+            font-size: 1rem;
+            opacity: 0.75;
+            color: var(--gold);
+        }
+
+        .unit-header.active::after,
+        .section-header.active::after {
+            content: '－';
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.55rem 0.75rem;
+            color: var(--cream);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            margin-bottom: 0.15rem;
+            margin-left: 0.75rem;
+        }
+
+        .link-item:hover {
+            background-color: rgba(201, 170, 122, 0.14);
+            transform: translateX(2px);
+        }
+
+        .item-link-text {
+            flex-grow: 1;
+            text-decoration: none;
+            color: inherit;
+            font-size: 0.88rem;
+        }
+
+        .item-link-text:hover {
+            color: var(--gold-strong);
+            text-decoration: underline;
+            text-underline-offset: 0.18rem;
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+        }
+
+        .progress-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--gold);
+            flex-shrink: 0;
+        }
+
+        .tool-card {
+            display: block;
+            padding: 1.1rem;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.25s ease, border-color 0.25s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(240, 199, 122, 0.4);
+        }
+
+        .tools-wrap {
+            padding: 2rem;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(243, 236, 227, 0.95));
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        footer {
+            background:
+                linear-gradient(180deg, rgba(236, 227, 216, 0.96), rgba(226, 214, 201, 0.98));
+            color: #6e5b4b;
+            padding: 3rem;
+            text-align: center;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(212, 176, 106, 0.18);
+        }
+
+        .fine-line {
+            border-bottom: 1px solid rgba(212, 176, 106, 0.18);
+        }
+
+        .muted {
+            color: #6e5b4b;
+        }
+
+        .gold {
+            color: var(--gold);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-bar text-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex justify-around items-center py-4 font-semibold tracking-wider">
+                <a href="#" class="nav-link">TOP</a>
+                <a href="#checking" class="nav-link">Checking</a>
+                <a href="#thinking" class="nav-link">Thinking</a>
+                <a href="#reflection" class="nav-link">Answer Keys</a>
+                <a href="#slide" class="nav-link">Slide</a>
+                <a href="#print" class="nav-link">Print</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section">
+        <div class="max-w-6xl mx-auto px-4 text-center relative z-10">
+            <div class="hero-badge serif">
+                <span>Mathematics Ⅰ</span>
+            </div>
+
+            <h1 class="hero-title serif">数学Ⅰのお部屋</h1>
+
+            <div class="max-w-5xl mx-auto px-0 mt-10">
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="info-box text-left">
+                        <p class="info-label serif">News</p>
+                        <p class="font-bold text-3xl serif">次回の数学検定：7/11（土）</p>
+                        <p class="text-base mt-3 info-accent">※ 1年生は12月から！</p>
+                    </div>
+                    <div class="info-box text-left">
+                        <p class="info-label serif">What the test will cover</p>
+                        <div class="grid grid-cols-1 gap-3 text-sm">
+                            <div>
+                                <p class="font-bold text-xl border-b pb-1 mb-2 serif" style="border-color: rgba(212,176,106,0.24);">数学Ⅰ</p>
+                                <p>・未定</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lesson-box text-left">
+                    <p class="font-bold text-xl mb-4 flex items-center serif gold">
+                        <span class="mr-3 text-2xl">✦</span>Today's Lesson
+                    </p>
+                    <div class="grid grid-cols-3 gap-4">
+                        <a href="#checking" class="lesson-step">
+                            <span class="text-3xl mb-2">🍷</span>
+                            <span class="font-bold serif">Checking</span>
+                            <span class="text-xs muted">復習の時間</span>
+                        </a>
+                        <a href="https://canva.link/f3soi0rq554ykw6" target="_blank" class="lesson-step">
+                            <span class="text-3xl mb-2">🍽️</span>
+                            <span class="font-bold serif">Thinking</span>
+                            <span class="text-xs muted">思考の時間</span>
+                        </a>
+                        <a href="https://separate-stealer-fc8.notion.site/41531ef08b94834982d2810ba1ecb5ac?source=copy_link" target="_blank" class="lesson-step">
+                            <span class="text-3xl mb-2">🕯️</span>
+                            <span class="font-bold serif">Answer Keys</span>
+                            <span class="text-xs muted">問の解答</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-10 py-12">
+
+        <section id="checking" class="mb-12 fine-line pb-6">
+            <div class="section-shell">
+                <div class="accordion-header text-3xl font-bold serif" onclick="toggleAccordion('checking-content')">
+                    <span><span class="section-icon">🍷</span>Checking</span>
+                    <span class="arrow transition-transform">▼</span>
+                </div>
+                <div id="checking-content" class="accordion-content">
+                    <div class="unit-grid-3">
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-check-1')">１章：数と式</div>
+                            <div id="unit-check-1" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'check-1-1')">1節 式の計算</div>
+                                <div id="check-1-1" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.2</a></div>
+                                </div>
+
+                                <div class="section-header" onclick="toggleNested(this, 'check-1-2')">2節 実数</div>
+                                <div id="check-1-2" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.2</a></div>
+                                </div>
+
+                                <div class="section-header" onclick="toggleNested(this, 'check-1-3')">3節 1次不等式</div>
+                                <div id="check-1-3" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.2</a></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-check-2')">２章：集合と論証</div>
+                            <div id="unit-check-2" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'check-2-1')">1節 集合</div>
+                                <div id="check-2-1" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.1</a></div>
+                                </div>
+
+                                <div class="section-header" onclick="toggleNested(this, 'check-2-2')">2節 論証</div>
+                                <div id="check-2-2" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.2</a></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-check-3')">３章：2次関数</div>
+                            <div id="unit-check-3" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'check-3-1')">1節 2次関数とそのグラフ</div>
+                                <div id="check-3-1" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.1</a></div>
+                                </div>
+
+                                <div class="section-header" onclick="toggleNested(this, 'check-3-2')">2節 2次方程式と2次不等式</div>
+                                <div id="check-3-2" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.2</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="unit-grid-2 mt-5">
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-check-4')">４章：図形と計量</div>
+                            <div id="unit-check-4" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'check-4-1')">1節 鋭角の三角比</div>
+                                <div id="check-4-1" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.2</a></div>
+                                </div>
+
+                                <div class="section-header" onclick="toggleNested(this, 'check-4-2')">2節 三角形への応用</div>
+                                <div id="check-4-2" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.2</a></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-check-5')">５章：データの分析</div>
+                            <div id="unit-check-5" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'check-5-1')">1節 データの分析</div>
+                                <div id="check-5-1" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.1</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="thinking" class="mb-12 fine-line pb-6">
+            <div class="section-shell">
+                <div class="accordion-header text-3xl font-bold serif" onclick="toggleAccordion('thinking-content')">
+                    <span><span class="section-icon">🍽️</span>Thinking</span>
+                    <span class="arrow transition-transform">▼</span>
+                </div>
+                <div id="thinking-content" class="accordion-content">
+                    <div class="unit-grid-3">
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-think-1')">１章：数と式</div>
+                            <div id="unit-think-1" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'think-1-1')">1節 式の計算</div>
+                                <div id="think-1-1" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="https://canva.link/f3soi0rq554ykw6" target="_blank" class="item-link-text">1節 スライド</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="https://miro.com/app/board/uXjVGlSdqfo=/?share_link_id=826172146504" target="_blank" class="item-link-text">GW:1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="https://miro.com/app/board/uXjVGk2DMJ0=/?share_link_id=59537443677" target="_blank" class="item-link-text">GW:2</a></div>
+                                </div>
+
+                                <div class="section-header" onclick="toggleNested(this, 'think-1-2')">2節 実数</div>
+                                <div id="think-1-2" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.2</a></div>
+                                </div>
+
+                                <div class="section-header" onclick="toggleNested(this, 'think-1-3')">3節 1次不等式</div>
+                                <div id="think-1-3" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.2</a></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-think-2')">２章：集合と論証</div>
+                            <div id="unit-think-2" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'think-2-1')">1節 集合</div>
+                                <div id="think-2-1" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.1</a></div>
+                                </div>
+
+                                <div class="section-header" onclick="toggleNested(this, 'think-2-2')">2節 論証</div>
+                                <div id="think-2-2" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.2</a></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-think-3')">３章：2次関数</div>
+                            <div id="unit-think-3" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'think-3-1')">1節 2次関数とそのグラフ</div>
+                                <div id="think-3-1" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.1</a></div>
+                                </div>
+
+                                <div class="section-header" onclick="toggleNested(this, 'think-3-2')">2節 2次方程式と2次不等式</div>
+                                <div id="think-3-2" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.2</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="unit-grid-2 mt-5">
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-think-4')">４章：図形と計量</div>
+                            <div id="unit-think-4" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'think-4-1')">1節 鋭角の三角比</div>
+                                <div id="think-4-1" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.2</a></div>
+                                </div>
+
+                                <div class="section-header" onclick="toggleNested(this, 'think-4-2')">2節 三角形への応用</div>
+                                <div id="think-4-2" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.2</a></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-think-5')">５章：データの分析</div>
+                            <div id="unit-think-5" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'think-5-1')">1節 データの分析</div>
+                                <div id="think-5-1" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.1</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="reflection" class="mb-12 fine-line pb-6">
+            <div class="section-shell">
+                <div class="accordion-header text-3xl font-bold serif" onclick="toggleAccordion('reflection-content')">
+                    <span><span class="section-icon">🕯️</span>Answer Keys</span>
+                    <span class="arrow transition-transform">▼</span>
+                </div>
+                <div id="reflection-content" class="accordion-content">
+                    <div class="unit-grid-3">
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-ref-1')">１章：数と式</div>
+                            <div id="unit-ref-1" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'ref-1-1')">1節 式の計算</div>
+                                <div id="ref-1-1" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="https://separate-stealer-fc8.notion.site/41531ef08b94834982d2810ba1ecb5ac?source=copy_link" target="_blank" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.2</a></div>
+                                </div>
+
+                                <div class="section-header" onclick="toggleNested(this, 'ref-1-2')">2節 実数</div>
+                                <div id="ref-1-2" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.2</a></div>
+                                </div>
+
+                                <div class="section-header" onclick="toggleNested(this, 'ref-1-3')">3節 1次不等式</div>
+                                <div id="ref-1-3" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.2</a></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-ref-2')">２章：集合と論証</div>
+                            <div id="unit-ref-2" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'ref-2-1')">1節 集合</div>
+                                <div id="ref-2-1" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.1</a></div>
+                                </div>
+
+                                <div class="section-header" onclick="toggleNested(this, 'ref-2-2')">2節 論証</div>
+                                <div id="ref-2-2" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.2</a></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-ref-3')">３章：2次関数</div>
+                            <div id="unit-ref-3" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'ref-3-1')">1節 2次関数とそのグラフ</div>
+                                <div id="ref-3-1" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.1</a></div>
+                                </div>
+
+                                <div class="section-header" onclick="toggleNested(this, 'ref-3-2')">2節 2次方程式と2次不等式</div>
+                                <div id="ref-3-2" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.2</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="unit-grid-2 mt-5">
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-ref-4')">４章：図形と計量</div>
+                            <div id="unit-ref-4" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'ref-4-1')">1節 鋭角の三角比</div>
+                                <div id="ref-4-1" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.2</a></div>
+                                </div>
+
+                                <div class="section-header" onclick="toggleNested(this, 'ref-4-2')">2節 三角形への応用</div>
+                                <div id="ref-4-2" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.1</a></div>
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" target="_blank" class="item-link-text">No.2</a></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-ref-5')">５章：データの分析</div>
+                            <div id="unit-ref-5" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'ref-5-1')">1節 データの分析</div>
+                                <div id="ref-5-1" class="hidden">
+                                    <div class="link-item"><input type="checkbox" class="progress-checkbox"><a href="#" class="item-link-text">No.1</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="slide" class="mb-12 fine-line pb-6">
+            <div class="section-shell">
+                <div class="accordion-header text-3xl font-bold serif" onclick="toggleAccordion('slide-content')">
+                    <span><span class="section-icon">🥂</span>Slide</span>
+                    <span class="arrow transition-transform">▼</span>
+                </div>
+                <div id="slide-content" class="accordion-content">
+                    <div class="unit-grid-3">
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-vector-sl')">１章：数と式</div>
+                            <div id="unit-vector-sl" class="hidden mt-1">
+                                <div class="link-item">
+                                    <input type="checkbox" class="progress-checkbox">
+                                    <a href="https://separate-stealer-fc8.notion.site/33831ef08b94806ea5b8f4f20bbf994d?source=copy_link" target="_blank" class="item-link-text">1節 式の計算</a>
+                                </div>
+                                <div class="link-item">
+                                    <input type="checkbox" class="progress-checkbox">
+                                    <a href="slide\No.2 指数法則.pdf" target="_blank" class="item-link-text">2節 実数</a>
+                                </div>
+                                <div class="link-item">
+                                    <input type="checkbox" class="progress-checkbox">
+                                    <a href="slide\No.2 指数法則.pdf" target="_blank" class="item-link-text">3節 1次不等式</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'sl-cur')">２章：集合と論証</div>
+                            <div id="sl-cur" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'sl-cur-s1')">1節 集合</div>
+                                <div id="sl-cur-s1" class="hidden">
+                                    <div class="link-item">
+                                        <input type="checkbox" class="progress-checkbox">
+                                        <a href="#" class="item-link-text">放物線の方程式</a>
+                                    </div>
+                                </div>
+                                <div class="section-header" onclick="toggleNested(this, 'sl-cur-s2')">2節 論証</div>
+                                <div id="sl-cur-s2" class="hidden">
+                                    <div class="link-item">
+                                        <input type="checkbox" class="progress-checkbox">
+                                        <a href="#" class="item-link-text">楕円の標準形</a>
+                                    </div>
+                                    <div class="link-item">
+                                        <input type="checkbox" class="progress-checkbox">
+                                        <a href="#" class="item-link-text">双曲線の標準形</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'sl-com')">３章：2次関数</div>
+                            <div id="sl-com" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'sl-com-s1')">1節 2次関数とそのグラフ</div>
+                                <div id="sl-com-s1" class="hidden">
+                                    <div class="link-item">
+                                        <input type="checkbox" class="progress-checkbox">
+                                        <a href="#" class="item-link-text">複素数の表示と絶対値</a>
+                                    </div>
+                                </div>
+                                <div class="section-header" onclick="toggleNested(this, 'sl-com-s2')">2節 2次方程式と2次不等式</div>
+                                <div id="sl-com-s2" class="hidden">
+                                    <div class="link-item">
+                                        <input type="checkbox" class="progress-checkbox">
+                                        <a href="#" class="item-link-text">複素数の極形式</a>
+                                    </div>
+                                    <div class="link-item">
+                                        <input type="checkbox" class="progress-checkbox">
+                                        <a href="#" class="item-link-text">ド・モアブルの定理</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div class="unit-grid-2">
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'unit-tr-sling')">４章：図形と計量</div>
+                            <div id="unit-tr-sling" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'sl-tr-s1')">1節 鋭角の三角比</div>
+                                <div id="sl-tr-s1" class="hidden">
+                                    <div class="link-item">
+                                        <input type="checkbox" class="progress-checkbox">
+                                        <a href="#" target="_blank" class="item-link-text">No.1</a>
+                                    </div>
+                                    <div class="link-item">
+                                        <input type="checkbox" class="progress-checkbox">
+                                        <a href="#" target="_blank" class="item-link-text">No.2</a>
+                                    </div>
+                                </div>
+                                <div class="section-header" onclick="toggleNested(this, 'sl-tr-s2')">2節 三角形への応用</div>
+                                <div id="sl-tr-s2" class="hidden">
+                                    <div class="link-item">
+                                        <input type="checkbox" class="progress-checkbox">
+                                        <a href="#" target="_blank" class="item-link-text">No.1</a>
+                                    </div>
+                                    <div class="link-item">
+                                        <input type="checkbox" class="progress-checkbox">
+                                        <a href="#" target="_blank" class="item-link-text">No.2</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="unit-section">
+                            <div class="unit-header" onclick="toggleNested(this, 'sl-da')">５章：データの分析</div>
+                            <div id="sl-da" class="hidden mt-1">
+                                <div class="section-header" onclick="toggleNested(this, 'sl-da-s1')">1節 データの分析</div>
+                                <div id="sl-da-s1" class="hidden">
+                                    <div class="link-item">
+                                        <input type="checkbox" class="progress-checkbox">
+                                        <a href="#" class="item-link-text">放物線の方程式</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="print" class="mb-12">
+            <div class="section-shell">
+                <div class="accordion-header text-3xl font-bold serif" onclick="toggleAccordion('print-content')">
+                    <span><span class="section-icon">🖨️</span>Print</span>
+                    <span class="arrow transition-transform">▼</span>
+                </div>
+                <div id="print-content" class="accordion-content">
+                    <div class="unit-section">
+                        <div class="link-item">
+                            <input type="checkbox" class="progress-checkbox">
+                            <a href="#" target="_blank" class="item-link-text">プリント No.1</a>
+                        </div>
+                        <div class="link-item">
+                            <input type="checkbox" class="progress-checkbox">
+                            <a href="#" target="_blank" class="item-link-text">プリント No.2</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tools" class="mb-12">
+            <div class="tools-wrap">
+                <h3 class="text-2xl font-bold mb-5 flex items-center serif gold">
+                    <span class="mr-3">✦</span>Learning Tools
+                </h3>
+                <div class="grid grid-cols-3 gap-4">
+                    <a href="https://examist.jp/category/mathematics/" target="_blank" class="tool-card">
+                        <p class="font-bold text-lg serif gold">受験の月</p>
+                        <p class="text-xs muted mt-1">受験に向けた幅広い問題が！</p>
+                    </a>
+                    <a href="https://hiraocafe.com/note/note.html" target="_blank" class="tool-card">
+                        <p class="font-bold text-lg serif gold">おいしい数学</p>
+                        <p class="text-xs muted mt-1">基本から入試問題まで！</p>
+                    </a>
+                    <a href="https://www.desmos.com/calculator?lang=ja" target="_blank" class="tool-card">
+                        <p class="font-bold text-lg serif gold">Desmos</p>
+                        <p class="text-xs muted mt-1">グラフが簡単に描ける</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p class="text-2xl mb-2 serif gold">数学Ⅰのお部屋</p>
+        <p>&copy; 2026 数学Ⅰのお部屋 - Restaurant Style Learning</p>
+    </footer>
+
+    <script>
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            if (!content) return;
+
+            const header = content.previousElementSibling;
+            const arrow = header ? header.querySelector('.arrow') : null;
+
+            content.classList.toggle('active');
+
+            if (arrow) {
+                arrow.style.transform = content.classList.contains('active')
+                    ? 'rotate(180deg)'
+                    : 'rotate(0deg)';
+            }
+        }
+
+        function toggleNested(headerEl, id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+
+            el.classList.toggle('hidden');
+            headerEl.classList.toggle('active');
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+
+                e.preventDefault();
+
+                const targetId = href.substring(1);
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    const offset = 95;
+                    const bodyRect = document.body.getBoundingClientRect().top;
+                    const elementRect = targetElement.getBoundingClientRect().top;
+                    const elementPosition = elementRect - bodyRect;
+                    const offsetPosition = elementPosition - offset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+
+                    const content = document.getElementById(targetId + '-content');
+                    if (content && !content.classList.contains('active')) {
+                        toggleAccordion(targetId + '-content');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
