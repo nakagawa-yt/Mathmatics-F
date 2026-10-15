@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>4つの校舎模型を比べよう</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f7f5ef;--card:#fff;--tx:#222;--mu:#667;--ac:#1f6feb;--bd:#ddd8c8;--gn:#1a7f4b;--bl:#b9553a;--wn:#fff3c4}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16181d;--card:#20232b;--tx:#eee;--mu:#9aa;--ac:#6ea8ff;--bd:#383c47;--gn:#5fd08f;--bl:#a2503a;--wn:#c9b25a}}
+:root[data-theme="dark"]{--bg:#16181d;--card:#20232b;--tx:#eee;--mu:#9aa;--ac:#6ea8ff;--bd:#383c47;--gn:#5fd08f;--bl:#a2503a;--wn:#c9b25a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;line-height:1.7}
+main{max-width:980px;margin:0 auto;padding:16px}
+h1{font-size:1.4rem;margin:.2em 0}
+.sub{color:var(--mu);margin:0 0 12px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+nav button,.btn{font:inherit;padding:8px 14px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;cursor:pointer}
+nav button.on,.btn.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.T{background:var(--card);border-left:5px solid var(--ac);padding:10px 14px;border-radius:8px;margin:10px 0;font-weight:600}
+.S{background:var(--card);border-left:5px solid var(--gn);padding:6px 14px;border-radius:8px;margin:6px 0;color:var(--mu);font-size:.95rem}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px;text-align:center}
+.card b{display:block}
+svg{width:100%;height:auto;display:block}
+svg text{fill:var(--tx);font-size:13px}
+.tri{fill:color-mix(in srgb,var(--ac) 12%,transparent);stroke:var(--ac);stroke-width:2.5}
+.arc{fill:none;stroke:var(--ac);stroke-width:2}
+.panel{display:none}.panel.on{display:block}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.note{font-size:.9rem;color:var(--mu)}
+</style></head><body><main>
+<h1>４つの校舎模型を比べて、共通点と相違点を探そう</h1>
+<p class="sub">学校の秘密倉庫から様々な建物の模型が４つ見つかりました。観測点から建物の屋上を見上げた様子を図にしています。</p>
+<nav id="nav"></nav>
+
+<section class="panel on" id="p0">
+ <div class="grid" id="g0"></div>
+</section>
+
+<section class="panel" id="p1">
+ <p class="note">観測点をそろえて重ねます。表示する模型をえらんで比べてみよう。</p>
+ <div class="row" id="chk"></div>
+ <div class="card"><svg id="ov" viewBox="0 0 330 300"></svg></div>
+</section>
+</main>
+<script>
+// h:高さ b:底辺 c:斜辺 a:角度(表示)
+const D=[{n:'①',h:3,b:4,c:5,a:37},{n:'②',h:6,b:8,c:10,a:37},{n:'③',h:9,b:12,c:15,a:37},{n:'④',h:12,b:5,c:13,a:67}];
+const NS='http://www.w3.org/2000/svg';
+const $=s=>document.querySelector(s);
+['① 観察する','② 重ねて確かめる'].forEach((t,i)=>{const b=document.createElement('button');b.textContent=t;b.onclick=()=>show(i);$('#nav').appendChild(b)});
+function show(i){document.querySelectorAll('.panel').forEach((p,k)=>p.classList.toggle('on',k==i));
+ [...$('#nav').children].forEach((b,k)=>b.classList.toggle('on',k==i))}
+show(0);
+function tri(d,i){
+ const u=15,m=34,ml=46,mr=52,mt=60,H=12*u,BW=[30,52,46,32][i];
+ const w=d.b*u,h=d.h*u;
+ const ox=ml,oy=mt+H,bx=ml+w,by=oy,cy=oy-h;
+ const W=12*u+BW+ml+mr;
+ const col=['#c98b5e','#d9c48a','#7f9bb3','#a8523c'][i];
+ let g=`<line x1="4" y1="${oy}" x2="${W-4}" y2="${oy}" stroke="currentColor" opacity=".35"/>`;
+ const win=(x,y)=>`<rect x="${x}" y="${y}" width="10" height="13" fill="var(--wn)"/>`;
+ g+=`<rect x="${bx}" y="${cy}" width="${BW}" height="${h}" fill="${col}"/>`;
+ if(i==0){ // 瓦屋根の2階建て
+  g+=`<polygon points="${bx-4},${cy} ${bx+BW/2},${cy-16} ${bx+BW+4},${cy}" fill="#7a3b2e"/>`;
+  g+=win(bx+5,cy+6)+win(bx+BW-15,cy+6);
+ }else if(i==1){ // 平屋根＋旗
+  g+=`<rect x="${bx-3}" y="${cy-4}" width="${BW+6}" height="4" fill="#8a7a50"/><line x1="${bx+BW/2}" y1="${cy-4}" x2="${bx+BW/2}" y2="${cy-30}" stroke="currentColor" stroke-width="2"/><polygon points="${bx+BW/2},${cy-30} ${bx+BW/2+14},${cy-25} ${bx+BW/2},${cy-20}" fill="#d9381e"/>`;
+  for(let r=0;r<2;r++)for(let c=0;c<3;c++)g+=win(bx+5+c*15,cy+6+r*22);
+ }else if(i==2){ // 時計塔つき
+  g+=`<rect x="${bx+BW/2-10}" y="${cy-26}" width="20" height="26" fill="${col}"/><polygon points="${bx+BW/2-12},${cy-26} ${bx+BW/2},${cy-38} ${bx+BW/2+12},${cy-26}" fill="#4a5f73"/><circle cx="${bx+BW/2}" cy="${cy-14}" r="6" fill="#fff" stroke="#333"/><path d="M${bx+BW/2},${cy-14} v-4 M${bx+BW/2},${cy-14} h3" stroke="#333" fill="none"/>`;
+  for(let r=0;r<3;r++)for(let c=0;c<3;c++)g+=win(bx+4+c*14,cy+8+r*24).replace('width="10"','width="9"');
+ }else{ // 高層＋アンテナ
+  g+=`<line x1="${bx+BW/2}" y1="${cy}" x2="${bx+BW/2}" y2="${cy-30}" stroke="currentColor" stroke-width="2"/><circle cx="${bx+BW/2}" cy="${cy-30}" r="3" fill="#d9381e"/>`;
+  for(let r=0;r<Math.floor((h-8)/20);r++)for(let c=0;c<2;c++)g+=win(bx+4+c*14,cy+6+r*20).replace('height="13"','height="11"').replace('width="10"','width="9"');
+ }
+ g+=`<rect x="${bx+BW/2-5}" y="${oy-12}" width="10" height="12" fill="var(--bg)"/>`;
+ g+=`<polygon class="tri" points="${ox},${oy} ${bx},${by} ${bx},${cy}"/>`;
+ g+=`<path d="M${bx-10},${by} v-10 h10" fill="none" stroke="currentColor" opacity=".6"/>`;
+ g+=`<text x="${(ox+bx)/2}" y="${oy+18}" text-anchor="middle">${d.b} m</text>`;
+ g+=`<text x="${bx+BW+6}" y="${(by+cy)/2+4}">${d.h} m</text>`;
+ g+=`<text x="${(ox+bx)/2-15*Math.sin(Math.atan2(h,w))-2}" y="${(oy+cy)/2-15*Math.cos(Math.atan2(h,w))+4}" text-anchor="middle">${d.c} m</text>`;
+ const t=Math.atan2(h,w),r=30;
+ g+=`<path class="arc" d="M${ox+r},${oy} A${r},${r} 0 0 0 ${ox+r*Math.cos(t)},${oy-r*Math.sin(t)}"/>`;
+ g+=`<circle cx="${ox}" cy="${oy}" r="4.5" fill="var(--tx)"/>`;
+ const s=document.createElementNS(NS,'svg');s.setAttribute('viewBox',`0 0 ${W} ${oy+m-8}`);s.innerHTML=g;return s}
+$('#g0').replaceChildren(...D.map((d,i)=>{const c=document.createElement('div');c.className='card';
+ const b=document.createElement('b');b.textContent=d.n;c.append(b,tri(d,i));return c}));
+// 重ねる
+const col=['#1f6feb','#1a9a5b','#c77d00','#8e44ad'];
+D.forEach((d,i)=>{const l=document.createElement('label');l.innerHTML=`<input type="checkbox" id="c${i}" checked> ${d.n}`;
+ l.querySelector('input').onchange=ov;$('#chk').appendChild(l)});
+function ov(){const u=20,x0=30,y0=272;
+ let g=`<line x1="10" y1="${y0}" x2="320" y2="${y0}" stroke="currentColor" opacity=".3"/><circle cx="${x0}" cy="${y0}" r="5" fill="var(--tx)"/><text x="${x0-6}" y="${y0+18}">観測点</text>`;
+ D.forEach((d,i)=>{if(!$('#c'+i).checked)return;
+  const bx=x0+d.b*u,cy=y0-d.h*u;
+  g+=`<polygon points="${x0},${y0} ${bx},${y0} ${bx},${cy}" fill="${col[i]}" fill-opacity=".1" stroke="${col[i]}" stroke-width="2"/>`;
+  g+=`<text x="${bx+4}" y="${cy+4}" style="fill:${col[i]};font-weight:700">${d.n}</text>`});
+ $('#ov').innerHTML=g}
+ov();
+</script></body></html>
